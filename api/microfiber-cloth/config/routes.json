@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/microfiber-cloths",
+      "handler": "microfiber-cloth.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/microfiber-cloths/count",
+      "handler": "microfiber-cloth.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/microfiber-cloths/:id",
+      "handler": "microfiber-cloth.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/microfiber-cloths",
+      "handler": "microfiber-cloth.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/microfiber-cloths/:id",
+      "handler": "microfiber-cloth.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/microfiber-cloths/:id",
+      "handler": "microfiber-cloth.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

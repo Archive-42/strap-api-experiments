@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "microfiber_cloths",
+  "info": {
+    "name": "microfiber cloth"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "price": {
+      "type": "decimal"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}
