@@ -1,17 +1,18 @@
-'use strict';
+"use strict";
 
-var define = require('define-properties');
-var RequireObjectCoercible = require('es-abstract/2019/RequireObjectCoercible');
+var define = require("define-properties");
+var RequireObjectCoercible = require("es-abstract/2019/RequireObjectCoercible");
 
-var implementation = require('./implementation');
-var getPolyfill = require('./polyfill');
-var shim = require('./shim');
+var implementation = require("./implementation");
+var getPolyfill = require("./polyfill");
+var shim = require("./shim");
 
 var slice = Array.prototype.slice;
 
 var polyfill = getPolyfill();
 
-var boundFindShim = function find(array, predicate) { // eslint-disable-line no-unused-vars
+var boundFindShim = function find(array, predicate) {
+	// eslint-disable-line no-unused-vars
 	RequireObjectCoercible(array);
 	var args = slice.call(arguments, 1);
 	return polyfill.apply(array, args);
@@ -20,7 +21,7 @@ var boundFindShim = function find(array, predicate) { // eslint-disable-line no-
 define(boundFindShim, {
 	getPolyfill: getPolyfill,
 	implementation: implementation,
-	shim: shim
+	shim: shim,
 });
 
 module.exports = boundFindShim;

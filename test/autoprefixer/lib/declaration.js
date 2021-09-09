@@ -1,22 +1,71 @@
 "use strict";
 
-function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+function _defaults(obj, defaults) {
+  var keys = Object.getOwnPropertyNames(defaults);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var value = Object.getOwnPropertyDescriptor(defaults, key);
+    if (value && value.configurable && obj[key] === undefined) {
+      Object.defineProperty(obj, key, value);
+    }
+  }
+  return obj;
+}
 
-function _createForOfIteratorHelperLoose(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; return function () { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } it = o[Symbol.iterator](); return it.next.bind(it); }
+function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+  var it;
+  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+    if (
+      Array.isArray(o) ||
+      (it = _unsupportedIterableToArray(o)) ||
+      (allowArrayLike && o && typeof o.length === "number")
+    ) {
+      if (it) o = it;
+      var i = 0;
+      return function () {
+        if (i >= o.length) return { done: true };
+        return { done: false, value: o[i++] };
+      };
+    }
+    throw new TypeError(
+      "Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+    );
+  }
+  it = o[Symbol.iterator]();
+  return it.next.bind(it);
+}
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
+    return _arrayLikeToArray(o, minLen);
+}
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _defaults(subClass, superClass); }
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  _defaults(subClass, superClass);
+}
 
-var Prefixer = require('./prefixer');
+var Prefixer = require("./prefixer");
 
-var Browsers = require('./browsers');
+var Browsers = require("./browsers");
 
-var utils = require('./utils');
+var utils = require("./utils");
 
-var Declaration = /*#__PURE__*/function (_Prefixer) {
+var Declaration = /*#__PURE__*/ (function (_Prefixer) {
   _inheritsLoose(Declaration, _Prefixer);
 
   function Declaration() {
@@ -26,36 +75,37 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
   var _proto = Declaration.prototype;
 
   /**
-     * Always true, because we already get prefixer by property name
-     */
-  _proto.check = function check()
-  /* decl */
+   * Always true, because we already get prefixer by property name
+   */
+  _proto.check = function check() /* decl */
   {
     return true;
-  }
+  };
   /**
-     * Return prefixed version of property
-     */
-  ;
+   * Return prefixed version of property
+   */
 
   _proto.prefixed = function prefixed(prop, prefix) {
     return prefix + prop;
-  }
+  };
   /**
-     * Return unprefixed version of property
-     */
-  ;
+   * Return unprefixed version of property
+   */
 
   _proto.normalize = function normalize(prop) {
     return prop;
-  }
+  };
   /**
-     * Check `value`, that it contain other prefixes, rather than `prefix`
-     */
-  ;
+   * Check `value`, that it contain other prefixes, rather than `prefix`
+   */
 
   _proto.otherPrefixes = function otherPrefixes(value, prefix) {
-    for (var _iterator = _createForOfIteratorHelperLoose(Browsers.prefixes()), _step; !(_step = _iterator()).done;) {
+    for (
+      var _iterator = _createForOfIteratorHelperLoose(Browsers.prefixes()),
+        _step;
+      !(_step = _iterator()).done;
+
+    ) {
       var other = _step.value;
 
       if (other === prefix) {
@@ -68,32 +118,30 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
     }
 
     return false;
-  }
+  };
   /**
-     * Set prefix to declaration
-     */
-  ;
+   * Set prefix to declaration
+   */
 
   _proto.set = function set(decl, prefix) {
     decl.prop = this.prefixed(decl.prop, prefix);
     return decl;
-  }
+  };
   /**
-     * Should we use visual cascade for prefixes
-     */
-  ;
+   * Should we use visual cascade for prefixes
+   */
 
   _proto.needCascade = function needCascade(decl) {
     if (!decl._autoprefixerCascade) {
-      decl._autoprefixerCascade = this.all.options.cascade !== false && decl.raw('before').includes('\n');
+      decl._autoprefixerCascade =
+        this.all.options.cascade !== false && decl.raw("before").includes("\n");
     }
 
     return decl._autoprefixerCascade;
-  }
+  };
   /**
-     * Return maximum length of possible prefixed property
-     */
-  ;
+   * Return maximum length of possible prefixed property
+   */
 
   _proto.maxPrefixed = function maxPrefixed(prefixes, decl) {
     if (decl._autoprefixerMax) {
@@ -102,7 +150,11 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
 
     var max = 0;
 
-    for (var _iterator2 = _createForOfIteratorHelperLoose(prefixes), _step2; !(_step2 = _iterator2()).done;) {
+    for (
+      var _iterator2 = _createForOfIteratorHelperLoose(prefixes), _step2;
+      !(_step2 = _iterator2()).done;
+
+    ) {
       var prefix = _step2.value;
       prefix = utils.removeNote(prefix);
 
@@ -113,37 +165,35 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
 
     decl._autoprefixerMax = max;
     return decl._autoprefixerMax;
-  }
+  };
   /**
-     * Calculate indentation to create visual cascade
-     */
-  ;
+   * Calculate indentation to create visual cascade
+   */
 
   _proto.calcBefore = function calcBefore(prefixes, decl, prefix) {
     if (prefix === void 0) {
-      prefix = '';
+      prefix = "";
     }
 
     var max = this.maxPrefixed(prefixes, decl);
     var diff = max - utils.removeNote(prefix).length;
-    var before = decl.raw('before');
+    var before = decl.raw("before");
 
     if (diff > 0) {
-      before += Array(diff).fill(' ').join('');
+      before += Array(diff).fill(" ").join("");
     }
 
     return before;
-  }
+  };
   /**
-     * Remove visual cascade
-     */
-  ;
+   * Remove visual cascade
+   */
 
   _proto.restoreBefore = function restoreBefore(decl) {
-    var lines = decl.raw('before').split('\n');
+    var lines = decl.raw("before").split("\n");
     var min = lines[lines.length - 1];
     this.all.group(decl).up(function (prefixed) {
-      var array = prefixed.raw('before').split('\n');
+      var array = prefixed.raw("before").split("\n");
       var last = array[array.length - 1];
 
       if (last.length < min.length) {
@@ -151,12 +201,11 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
       }
     });
     lines[lines.length - 1] = min;
-    decl.raws.before = lines.join('\n');
-  }
+    decl.raws.before = lines.join("\n");
+  };
   /**
-     * Clone and insert new declaration
-     */
-  ;
+   * Clone and insert new declaration
+   */
 
   _proto.insert = function insert(decl, prefix, prefixes) {
     var cloned = this.set(this.clone(decl), prefix);
@@ -174,11 +223,10 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
     }
 
     return decl.parent.insertBefore(decl, cloned);
-  }
+  };
   /**
-     * Did this declaration has this prefix above
-     */
-  ;
+   * Did this declaration has this prefix above
+   */
 
   _proto.isAlready = function isAlready(decl, prefixed) {
     var already = this.all.group(decl).up(function (i) {
@@ -192,25 +240,26 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
     }
 
     return already;
-  }
+  };
   /**
-     * Clone and add prefixes for declaration
-     */
-  ;
+   * Clone and add prefixes for declaration
+   */
 
   _proto.add = function add(decl, prefix, prefixes, result) {
     var prefixed = this.prefixed(decl.prop, prefix);
 
-    if (this.isAlready(decl, prefixed) || this.otherPrefixes(decl.value, prefix)) {
+    if (
+      this.isAlready(decl, prefixed) ||
+      this.otherPrefixes(decl.value, prefix)
+    ) {
       return undefined;
     }
 
     return this.insert(decl, prefix, prefixes, result);
-  }
+  };
   /**
-     * Add spaces for visual cascade
-     */
-  ;
+   * Add spaces for visual cascade
+   */
 
   _proto.process = function process(decl, result) {
     if (!this.needCascade(decl)) {
@@ -227,17 +276,16 @@ var Declaration = /*#__PURE__*/function (_Prefixer) {
 
     this.restoreBefore(decl);
     decl.raws.before = this.calcBefore(prefixes, decl);
-  }
+  };
   /**
-     * Return list of prefixed properties to clean old prefixes
-     */
-  ;
+   * Return list of prefixed properties to clean old prefixes
+   */
 
   _proto.old = function old(prop, prefix) {
     return [this.prefixed(prop, prefix)];
   };
 
   return Declaration;
-}(Prefixer);
+})(Prefixer);
 
 module.exports = Declaration;

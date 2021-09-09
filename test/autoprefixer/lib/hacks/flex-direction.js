@@ -1,16 +1,42 @@
 "use strict";
 
-function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+function _defaults(obj, defaults) {
+  var keys = Object.getOwnPropertyNames(defaults);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var value = Object.getOwnPropertyDescriptor(defaults, key);
+    if (value && value.configurable && obj[key] === undefined) {
+      Object.defineProperty(obj, key, value);
+    }
+  }
+  return obj;
+}
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _defaults(subClass, superClass); }
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  _defaults(subClass, superClass);
+}
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
 
-var flexSpec = require('./flex-spec');
+var flexSpec = require("./flex-spec");
 
-var Declaration = require('../declaration');
+var Declaration = require("../declaration");
 
-var FlexDirection = /*#__PURE__*/function (_Declaration) {
+var FlexDirection = /*#__PURE__*/ (function (_Declaration) {
   _inheritsLoose(FlexDirection, _Declaration);
 
   function FlexDirection() {
@@ -23,12 +49,11 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
    * Return property name by final spec
    */
   _proto.normalize = function normalize() {
-    return 'flex-direction';
-  }
+    return "flex-direction";
+  };
   /**
    * Use two properties for 2009 spec
    */
-  ;
 
   _proto.insert = function insert(decl, prefix, prefixes) {
     var spec;
@@ -43,7 +68,9 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
     }
 
     var already = decl.parent.some(function (i) {
-      return i.prop === prefix + 'box-orient' || i.prop === prefix + 'box-direction';
+      return (
+        i.prop === prefix + "box-orient" || i.prop === prefix + "box-direction"
+      );
     });
 
     if (already) {
@@ -53,16 +80,16 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
     var v = decl.value;
     var orient, dir;
 
-    if (v === 'inherit' || v === 'initial' || v === 'unset') {
+    if (v === "inherit" || v === "initial" || v === "unset") {
       orient = v;
       dir = v;
     } else {
-      orient = v.includes('row') ? 'horizontal' : 'vertical';
-      dir = v.includes('reverse') ? 'reverse' : 'normal';
+      orient = v.includes("row") ? "horizontal" : "vertical";
+      dir = v.includes("reverse") ? "reverse" : "normal";
     }
 
     var cloned = this.clone(decl);
-    cloned.prop = prefix + 'box-orient';
+    cloned.prop = prefix + "box-orient";
     cloned.value = orient;
 
     if (this.needCascade(decl)) {
@@ -71,7 +98,7 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
 
     decl.parent.insertBefore(decl, cloned);
     cloned = this.clone(decl);
-    cloned.prop = prefix + 'box-direction';
+    cloned.prop = prefix + "box-direction";
     cloned.value = dir;
 
     if (this.needCascade(decl)) {
@@ -79,11 +106,10 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
     }
 
     return decl.parent.insertBefore(decl, cloned);
-  }
+  };
   /**
    * Clean two properties for 2009 spec
    */
-  ;
 
   _proto.old = function old(prop, prefix) {
     var spec;
@@ -94,15 +120,19 @@ var FlexDirection = /*#__PURE__*/function (_Declaration) {
     prefix = _flexSpec2[1];
 
     if (spec === 2009) {
-      return [prefix + 'box-orient', prefix + 'box-direction'];
+      return [prefix + "box-orient", prefix + "box-direction"];
     } else {
       return _Declaration.prototype.old.call(this, prop, prefix);
     }
   };
 
   return FlexDirection;
-}(Declaration);
+})(Declaration);
 
-_defineProperty(FlexDirection, "names", ['flex-direction', 'box-direction', 'box-orient']);
+_defineProperty(FlexDirection, "names", [
+  "flex-direction",
+  "box-direction",
+  "box-orient",
+]);
 
 module.exports = FlexDirection;

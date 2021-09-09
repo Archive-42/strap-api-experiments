@@ -1,18 +1,32 @@
 "use strict";
 
-function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+function _defaults(obj, defaults) {
+  var keys = Object.getOwnPropertyNames(defaults);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var value = Object.getOwnPropertyDescriptor(defaults, key);
+    if (value && value.configurable && obj[key] === undefined) {
+      Object.defineProperty(obj, key, value);
+    }
+  }
+  return obj;
+}
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _defaults(subClass, superClass); }
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  _defaults(subClass, superClass);
+}
 
-var vendor = require('postcss').vendor;
+var vendor = require("postcss").vendor;
 
-var Prefixer = require('./prefixer');
+var Prefixer = require("./prefixer");
 
-var OldValue = require('./old-value');
+var OldValue = require("./old-value");
 
-var utils = require('./utils');
+var utils = require("./utils");
 
-var Value = /*#__PURE__*/function (_Prefixer) {
+var Value = /*#__PURE__*/ (function (_Prefixer) {
   _inheritsLoose(Value, _Prefixer);
 
   function Value() {
@@ -20,8 +34,8 @@ var Value = /*#__PURE__*/function (_Prefixer) {
   }
 
   /**
-     * Clone decl for each prefixed values
-     */
+   * Clone decl for each prefixed values
+   */
   Value.save = function save(prefixes, decl) {
     var _this = this;
 
@@ -38,7 +52,7 @@ var Value = /*#__PURE__*/function (_Prefixer) {
       var item = void 0;
       var propPrefix = vendor.prefix(prop);
 
-      if (propPrefix === '-pie-') {
+      if (propPrefix === "-pie-") {
         return "continue";
       }
 
@@ -51,16 +65,18 @@ var Value = /*#__PURE__*/function (_Prefixer) {
       var prefixed = prefixes.prefixed(prop, prefix);
       var rule = decl.parent;
 
-      if (!rule.every(function (i) {
-        return i.prop !== prefixed;
-      })) {
+      if (
+        !rule.every(function (i) {
+          return i.prop !== prefixed;
+        })
+      ) {
         result.push(item);
         return "continue";
       }
 
-      var trimmed = value.replace(/\s+/, ' ');
+      var trimmed = value.replace(/\s+/, " ");
       var already = rule.some(function (i) {
-        return i.prop === decl.prop && i.value.replace(/\s+/, ' ') === trimmed;
+        return i.prop === decl.prop && i.value.replace(/\s+/, " ") === trimmed;
       });
 
       if (already) {
@@ -69,7 +85,7 @@ var Value = /*#__PURE__*/function (_Prefixer) {
       }
 
       var cloned = _this.clone(decl, {
-        value: value
+        value: value,
       });
 
       item = decl.parent.insertBefore(decl, cloned);
@@ -83,11 +99,10 @@ var Value = /*#__PURE__*/function (_Prefixer) {
     }
 
     return result;
-  }
+  };
   /**
-     * Is declaration need to be prefixed
-     */
-  ;
+   * Is declaration need to be prefixed
+   */
 
   var _proto = Value.prototype;
 
@@ -99,27 +114,24 @@ var Value = /*#__PURE__*/function (_Prefixer) {
     }
 
     return !!value.match(this.regexp());
-  }
+  };
   /**
-     * Lazy regexp loading
-     */
-  ;
+   * Lazy regexp loading
+   */
 
   _proto.regexp = function regexp() {
     return this.regexpCache || (this.regexpCache = utils.regexp(this.name));
-  }
+  };
   /**
-     * Add prefix to values in string
-     */
-  ;
+   * Add prefix to values in string
+   */
 
   _proto.replace = function replace(string, prefix) {
     return string.replace(this.regexp(), "$1" + prefix + "$2");
-  }
+  };
   /**
-     * Get value with comments if it was not changed
-     */
-  ;
+   * Get value with comments if it was not changed
+   */
 
   _proto.value = function value(decl) {
     if (decl.raws.value && decl.raws.value.value === decl.value) {
@@ -127,11 +139,10 @@ var Value = /*#__PURE__*/function (_Prefixer) {
     } else {
       return decl.value;
     }
-  }
+  };
   /**
-     * Save values with next prefixed token
-     */
-  ;
+   * Save values with next prefixed token
+   */
 
   _proto.add = function add(decl, prefix) {
     if (!decl._autoprefixerValues) {
@@ -148,17 +159,16 @@ var Value = /*#__PURE__*/function (_Prefixer) {
     } while (value !== before);
 
     decl._autoprefixerValues[prefix] = value;
-  }
+  };
   /**
-     * Return function to fast find prefixed value
-     */
-  ;
+   * Return function to fast find prefixed value
+   */
 
   _proto.old = function old(prefix) {
     return new OldValue(this.name, prefix + this.name);
   };
 
   return Value;
-}(Prefixer);
+})(Prefixer);
 
 module.exports = Value;

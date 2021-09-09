@@ -1,8 +1,8 @@
 "use strict";
 
-var utils = require('./utils');
+var utils = require("./utils");
 
-var OldValue = /*#__PURE__*/function () {
+var OldValue = /*#__PURE__*/ (function () {
   function OldValue(unprefixed, prefixed, string, regexp) {
     this.unprefixed = unprefixed;
     this.prefixed = prefixed;
@@ -10,9 +10,8 @@ var OldValue = /*#__PURE__*/function () {
     this.regexp = regexp || utils.regexp(prefixed);
   }
   /**
-     * Check, that value contain old value
-     */
-
+   * Check, that value contain old value
+   */
 
   var _proto = OldValue.prototype;
 
@@ -25,6 +24,6 @@ var OldValue = /*#__PURE__*/function () {
   };
 
   return OldValue;
-}();
+})();
 
 module.exports = OldValue;

@@ -5,7 +5,7 @@
  * Released under the MIT License.
  */
 
-'use strict';
+"use strict";
 
 module.exports = function slice(arr, start, end) {
   var len = arr.length;

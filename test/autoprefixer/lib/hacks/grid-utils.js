@@ -1,23 +1,63 @@
 "use strict";
 
-function _createForOfIteratorHelperLoose(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; return function () { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } it = o[Symbol.iterator](); return it.next.bind(it); }
+function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+  var it;
+  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+    if (
+      Array.isArray(o) ||
+      (it = _unsupportedIterableToArray(o)) ||
+      (allowArrayLike && o && typeof o.length === "number")
+    ) {
+      if (it) o = it;
+      var i = 0;
+      return function () {
+        if (i >= o.length) return { done: true };
+        return { done: false, value: o[i++] };
+      };
+    }
+    throw new TypeError(
+      "Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+    );
+  }
+  it = o[Symbol.iterator]();
+  return it.next.bind(it);
+}
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
+    return _arrayLikeToArray(o, minLen);
+}
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
 
-var parser = require('postcss-value-parser');
+var parser = require("postcss-value-parser");
 
-var list = require('postcss').list;
+var list = require("postcss").list;
 
-var uniq = require('../utils').uniq;
+var uniq = require("../utils").uniq;
 
-var escapeRegexp = require('../utils').escapeRegexp;
+var escapeRegexp = require("../utils").escapeRegexp;
 
-var splitSelector = require('../utils').splitSelector;
+var splitSelector = require("../utils").splitSelector;
 
 function convert(value) {
-  if (value && value.length === 2 && value[0] === 'span' && parseInt(value[1], 10) > 0) {
+  if (
+    value &&
+    value.length === 2 &&
+    value[0] === "span" &&
+    parseInt(value[1], 10) > 0
+  ) {
     return [false, parseInt(value[1], 10)];
   }
 
@@ -37,12 +77,12 @@ function translate(values, startIndex, endIndex) {
   }
 
   var _convert = convert(startValue),
-      start = _convert[0],
-      spanStart = _convert[1];
+    start = _convert[0],
+    spanStart = _convert[1];
 
   var _convert2 = convert(endValue),
-      end = _convert2[0],
-      spanEnd = _convert2[1];
+    end = _convert2[0],
+    spanEnd = _convert2[1];
 
   if (start && !endValue) {
     return [start, false];
@@ -69,13 +109,17 @@ function parse(decl) {
   var current = 0;
   values[current] = [];
 
-  for (var _iterator = _createForOfIteratorHelperLoose(node.nodes), _step; !(_step = _iterator()).done;) {
+  for (
+    var _iterator = _createForOfIteratorHelperLoose(node.nodes), _step;
+    !(_step = _iterator()).done;
+
+  ) {
     var i = _step.value;
 
-    if (i.type === 'div') {
+    if (i.type === "div") {
       current += 1;
       values[current] = [];
-    } else if (i.type === 'word') {
+    } else if (i.type === "word") {
       values[current].push(i.value);
     }
   }
@@ -84,46 +128,50 @@ function parse(decl) {
 }
 
 function insertDecl(decl, prop, value) {
-  if (value && !decl.parent.some(function (i) {
-    return i.prop === "-ms-" + prop;
-  })) {
+  if (
+    value &&
+    !decl.parent.some(function (i) {
+      return i.prop === "-ms-" + prop;
+    })
+  ) {
     decl.cloneBefore({
       prop: "-ms-" + prop,
-      value: value.toString()
+      value: value.toString(),
     });
   }
 } // Track transforms
 
-
 function prefixTrackProp(_ref) {
   var prop = _ref.prop,
-      prefix = _ref.prefix;
-  return prefix + prop.replace('template-', '');
+    prefix = _ref.prefix;
+  return prefix + prop.replace("template-", "");
 }
 
 function transformRepeat(_ref2, _ref3) {
   var nodes = _ref2.nodes;
   var gap = _ref3.gap;
 
-  var _nodes$reduce = nodes.reduce(function (result, node) {
-    if (node.type === 'div' && node.value === ',') {
-      result.key = 'size';
-    } else {
-      result[result.key].push(parser.stringify(node));
-    }
+  var _nodes$reduce = nodes.reduce(
+      function (result, node) {
+        if (node.type === "div" && node.value === ",") {
+          result.key = "size";
+        } else {
+          result[result.key].push(parser.stringify(node));
+        }
 
-    return result;
-  }, {
-    key: 'count',
-    size: [],
-    count: []
-  }),
-      count = _nodes$reduce.count,
-      size = _nodes$reduce.size; // insert gap values
-
+        return result;
+      },
+      {
+        key: "count",
+        size: [],
+        count: [],
+      }
+    ),
+    count = _nodes$reduce.count,
+    size = _nodes$reduce.size; // insert gap values
 
   if (gap) {
-    var _ret = function () {
+    var _ret = (function () {
       size = size.filter(function (i) {
         return i.trim();
       });
@@ -144,37 +192,41 @@ function transformRepeat(_ref2, _ref3) {
       }
 
       return {
-        v: val.join(' ')
+        v: val.join(" "),
       };
-    }();
+    })();
 
     if (typeof _ret === "object") return _ret.v;
   }
 
-  return "(" + size.join('') + ")[" + count.join('') + "]";
+  return "(" + size.join("") + ")[" + count.join("") + "]";
 }
 
 function prefixTrackValue(_ref4) {
   var value = _ref4.value,
-      gap = _ref4.gap;
+    gap = _ref4.gap;
   var result = parser(value).nodes.reduce(function (nodes, node) {
-    if (node.type === 'function' && node.value === 'repeat') {
+    if (node.type === "function" && node.value === "repeat") {
       return nodes.concat({
-        type: 'word',
+        type: "word",
         value: transformRepeat(node, {
-          gap: gap
-        })
+          gap: gap,
+        }),
       });
     }
 
-    if (gap && node.type === 'space') {
-      return nodes.concat({
-        type: 'space',
-        value: ' '
-      }, {
-        type: 'word',
-        value: gap
-      }, node);
+    if (gap && node.type === "space") {
+      return nodes.concat(
+        {
+          type: "space",
+          value: " ",
+        },
+        {
+          type: "word",
+          value: gap,
+        },
+        node
+      );
     }
 
     return nodes.concat(node);
@@ -182,14 +234,13 @@ function prefixTrackValue(_ref4) {
   return parser.stringify(result);
 } // Parse grid-template-areas
 
-
 var DOTS = /^\.+$/;
 
 function track(start, end) {
   return {
     start: start,
     end: end,
-    span: end - start
+    span: end - start,
   };
 }
 
@@ -199,23 +250,23 @@ function getColumns(line) {
 
 function parseGridAreas(_ref5) {
   var rows = _ref5.rows,
-      gap = _ref5.gap;
+    gap = _ref5.gap;
   return rows.reduce(function (areas, line, rowIndex) {
     if (gap.row) rowIndex *= 2;
-    if (line.trim() === '') return areas;
+    if (line.trim() === "") return areas;
     getColumns(line).forEach(function (area, columnIndex) {
       if (DOTS.test(area)) return;
       if (gap.column) columnIndex *= 2;
 
-      if (typeof areas[area] === 'undefined') {
+      if (typeof areas[area] === "undefined") {
         areas[area] = {
           column: track(columnIndex + 1, columnIndex + 2),
-          row: track(rowIndex + 1, rowIndex + 2)
+          row: track(rowIndex + 1, rowIndex + 2),
         };
       } else {
         var _areas$area = areas[area],
-            column = _areas$area.column,
-            row = _areas$area.row;
+          column = _areas$area.column,
+          row = _areas$area.row;
         column.start = Math.min(column.start, columnIndex + 1);
         column.end = Math.max(column.end, columnIndex + 2);
         column.span = column.end - column.start;
@@ -228,14 +279,13 @@ function parseGridAreas(_ref5) {
   }, {});
 } // Parse grid-template
 
-
 function testTrack(node) {
-  return node.type === 'word' && /^\[.+]$/.test(node.value);
+  return node.type === "word" && /^\[.+]$/.test(node.value);
 }
 
 function verifyRowSize(result) {
   if (result.areas.length > result.rows.length) {
-    result.rows.push('auto');
+    result.rows.push("auto");
   }
 
   return result;
@@ -243,48 +293,49 @@ function verifyRowSize(result) {
 
 function parseTemplate(_ref6) {
   var decl = _ref6.decl,
-      gap = _ref6.gap;
-  var gridTemplate = parser(decl.value).nodes.reduce(function (result, node) {
-    var type = node.type,
+    gap = _ref6.gap;
+  var gridTemplate = parser(decl.value).nodes.reduce(
+    function (result, node) {
+      var type = node.type,
         value = node.value;
-    if (testTrack(node) || type === 'space') return result; // area
+      if (testTrack(node) || type === "space") return result; // area
 
-    if (type === 'string') {
-      result = verifyRowSize(result);
-      result.areas.push(value);
-    } // values and function
+      if (type === "string") {
+        result = verifyRowSize(result);
+        result.areas.push(value);
+      } // values and function
 
+      if (type === "word" || type === "function") {
+        result[result.key].push(parser.stringify(node));
+      } // divider(/)
 
-    if (type === 'word' || type === 'function') {
-      result[result.key].push(parser.stringify(node));
-    } // divider(/)
+      if (type === "div" && value === "/") {
+        result.key = "columns";
+        result = verifyRowSize(result);
+      }
 
-
-    if (type === 'div' && value === '/') {
-      result.key = 'columns';
-      result = verifyRowSize(result);
+      return result;
+    },
+    {
+      key: "rows",
+      columns: [],
+      rows: [],
+      areas: [],
     }
-
-    return result;
-  }, {
-    key: 'rows',
-    columns: [],
-    rows: [],
-    areas: []
-  });
+  );
   return {
     areas: parseGridAreas({
       rows: gridTemplate.areas,
-      gap: gap
+      gap: gap,
     }),
     columns: prefixTrackValue({
-      value: gridTemplate.columns.join(' '),
-      gap: gap.column
+      value: gridTemplate.columns.join(" "),
+      gap: gap.column,
     }),
     rows: prefixTrackValue({
-      value: gridTemplate.rows.join(' '),
-      gap: gap.row
-    })
+      value: gridTemplate.rows.join(" "),
+      gap: gap.row,
+    }),
   };
 } // Insert parsed grid areas
 
@@ -296,7 +347,6 @@ function parseTemplate(_ref6) {
  * @return {Array<Object>}
  */
 
-
 function getMSDecls(area, addRowSpan, addColumnSpan) {
   if (addRowSpan === void 0) {
     addRowSpan = false;
@@ -306,23 +356,32 @@ function getMSDecls(area, addRowSpan, addColumnSpan) {
     addColumnSpan = false;
   }
 
-  return [].concat({
-    prop: '-ms-grid-row',
-    value: String(area.row.start)
-  }, area.row.span > 1 || addRowSpan ? {
-    prop: '-ms-grid-row-span',
-    value: String(area.row.span)
-  } : [], {
-    prop: '-ms-grid-column',
-    value: String(area.column.start)
-  }, area.column.span > 1 || addColumnSpan ? {
-    prop: '-ms-grid-column-span',
-    value: String(area.column.span)
-  } : []);
+  return [].concat(
+    {
+      prop: "-ms-grid-row",
+      value: String(area.row.start),
+    },
+    area.row.span > 1 || addRowSpan
+      ? {
+          prop: "-ms-grid-row-span",
+          value: String(area.row.span),
+        }
+      : [],
+    {
+      prop: "-ms-grid-column",
+      value: String(area.column.start),
+    },
+    area.column.span > 1 || addColumnSpan
+      ? {
+          prop: "-ms-grid-column-span",
+          value: String(area.column.span),
+        }
+      : []
+  );
 }
 
 function getParentMedia(parent) {
-  if (parent.type === 'atrule' && parent.name === 'media') {
+  if (parent.type === "atrule" && parent.name === "media") {
     return parent;
   }
 
@@ -339,21 +398,20 @@ function getParentMedia(parent) {
  * @return {Array<Rule>} rules with changed selectors
  */
 
-
 function changeDuplicateAreaSelectors(ruleSelectors, templateSelectors) {
   ruleSelectors = ruleSelectors.map(function (selector) {
     var selectorBySpace = list.space(selector);
     var selectorByComma = list.comma(selector);
 
     if (selectorBySpace.length > selectorByComma.length) {
-      selector = selectorBySpace.slice(-1).join('');
+      selector = selectorBySpace.slice(-1).join("");
     }
 
     return selector;
   });
   return ruleSelectors.map(function (ruleSelector) {
     var newSelector = templateSelectors.map(function (tplSelector, index) {
-      var space = index === 0 ? '' : ' ';
+      var space = index === 0 ? "" : " ";
       return "" + space + tplSelector + " > " + ruleSelector;
     });
     return newSelector;
@@ -365,7 +423,6 @@ function changeDuplicateAreaSelectors(ruleSelectors, templateSelectors) {
  * @param  {Rule} ruleB
  * @return {Boolean}
  */
-
 
 function selectorsEqual(ruleA, ruleB) {
   return ruleA.selectors.some(function (sel) {
@@ -380,7 +437,6 @@ function selectorsEqual(ruleA, ruleB) {
  * @return {Object} parsed data
  */
 
-
 function parseGridTemplatesData(css) {
   var parsed = []; // we walk through every grid-template(-areas) declaration and store
   // data with the same area names inside the item
@@ -392,10 +448,10 @@ function parseGridTemplatesData(css) {
     var inheritedGap = inheritGridGap(d, gap);
 
     var _parseTemplate = parseTemplate({
-      decl: d,
-      gap: inheritedGap || gap
-    }),
-        areas = _parseTemplate.areas;
+        decl: d,
+        gap: inheritedGap || gap,
+      }),
+      areas = _parseTemplate.areas;
 
     var areaNames = Object.keys(areas); // skip node if it doesn't have areas
 
@@ -404,20 +460,21 @@ function parseGridTemplatesData(css) {
     } // check parsed array for item that include the same area names
     // return index of that item
 
-
     var index = parsed.reduce(function (acc, _ref7, idx) {
       var allAreas = _ref7.allAreas;
-      var hasAreas = allAreas && areaNames.some(function (area) {
-        return allAreas.includes(area);
-      });
+      var hasAreas =
+        allAreas &&
+        areaNames.some(function (area) {
+          return allAreas.includes(area);
+        });
       return hasAreas ? idx : acc;
     }, null);
 
     if (index !== null) {
       // index is found, add the grid-template data to that item
       var _parsed$index = parsed[index],
-          allAreas = _parsed$index.allAreas,
-          rules = _parsed$index.rules; // check if rule has no duplicate area names
+        allAreas = _parsed$index.allAreas,
+        rules = _parsed$index.rules; // check if rule has no duplicate area names
 
       var hasNoDuplicates = rules.some(function (r) {
         return r.hasDuplicates === false && selectorsEqual(r, rule);
@@ -462,22 +519,24 @@ function parseGridTemplatesData(css) {
         selectors: rule.selectors,
         node: rule,
         duplicateAreaNames: duplicateAreaNames,
-        areas: areas
+        areas: areas,
       });
     } else {
       // index is NOT found, push the new item to the parsed array
       parsed.push({
         allAreas: areaNames,
         areasCount: 0,
-        rules: [{
-          hasDuplicates: false,
-          duplicateRules: [],
-          params: media.params,
-          selectors: rule.selectors,
-          node: rule,
-          duplicateAreaNames: [],
-          areas: areas
-        }]
+        rules: [
+          {
+            hasDuplicates: false,
+            duplicateRules: [],
+            params: media.params,
+            selectors: rule.selectors,
+            node: rule,
+            duplicateAreaNames: [],
+            areas: areas,
+          },
+        ],
       });
     }
 
@@ -492,7 +551,6 @@ function parseGridTemplatesData(css) {
  * @return {void}
  */
 
-
 function insertAreas(css, isDisabled) {
   // parse grid-template declarations
   var gridTemplatesData = parseGridTemplatesData(css); // return undefined if no declarations found
@@ -501,18 +559,19 @@ function insertAreas(css, isDisabled) {
     return undefined;
   } // we need to store the rules that we will insert later
 
-
   var rulesToInsert = {};
-  css.walkDecls('grid-area', function (gridArea) {
+  css.walkDecls("grid-area", function (gridArea) {
     var gridAreaRule = gridArea.parent;
-    var hasPrefixedRow = gridAreaRule.first.prop === '-ms-grid-row';
+    var hasPrefixedRow = gridAreaRule.first.prop === "-ms-grid-row";
     var gridAreaMedia = getParentMedia(gridAreaRule);
 
     if (isDisabled(gridArea)) {
       return undefined;
     }
 
-    var gridAreaRuleIndex = gridAreaMedia ? css.index(gridAreaMedia) : css.index(gridAreaRule);
+    var gridAreaRuleIndex = gridAreaMedia
+      ? css.index(gridAreaMedia)
+      : css.index(gridAreaRule);
     var value = gridArea.value; // found the data that matches grid-area identifier
 
     var data = gridTemplatesData.filter(function (d) {
@@ -526,13 +585,14 @@ function insertAreas(css, isDisabled) {
     var lastArea = data.allAreas[data.allAreas.length - 1];
     var selectorBySpace = list.space(gridAreaRule.selector);
     var selectorByComma = list.comma(gridAreaRule.selector);
-    var selectorIsComplex = selectorBySpace.length > 1 && selectorBySpace.length > selectorByComma.length; // prevent doubling of prefixes
+    var selectorIsComplex =
+      selectorBySpace.length > 1 &&
+      selectorBySpace.length > selectorByComma.length; // prevent doubling of prefixes
 
     if (hasPrefixedRow) {
       return false;
     } // create the empty object with the key as the last area name
     // e.g if we have templates with "a b c" values, "c" will be the last area
-
 
     if (!rulesToInsert[lastArea]) {
       rulesToInsert[lastArea] = {};
@@ -540,7 +600,11 @@ function insertAreas(css, isDisabled) {
 
     var lastRuleIsSet = false; // walk through every grid-template rule data
 
-    for (var _iterator2 = _createForOfIteratorHelperLoose(data.rules), _step2; !(_step2 = _iterator2()).done;) {
+    for (
+      var _iterator2 = _createForOfIteratorHelperLoose(data.rules), _step2;
+      !(_step2 = _iterator2()).done;
+
+    ) {
       var rule = _step2.value;
       var area = rule.areas[value];
       var hasDuplicateName = rule.duplicateAreaNames.includes(value); // if we can't find the area name, update lastRule and continue
@@ -556,20 +620,23 @@ function insertAreas(css, isDisabled) {
       } // for grid-templates inside media rule we need to create empty
       // array to push prefixed grid-area rules later
 
-
       if (rule.params && !rulesToInsert[lastArea][rule.params]) {
         rulesToInsert[lastArea][rule.params] = [];
       }
 
       if ((!rule.hasDuplicates || !hasDuplicateName) && !rule.params) {
         // grid-template has no duplicates and not inside media rule
-        getMSDecls(area, false, false).reverse().forEach(function (i) {
-          return gridAreaRule.prepend(Object.assign(i, {
-            raws: {
-              between: gridArea.raws.between
-            }
-          }));
-        });
+        getMSDecls(area, false, false)
+          .reverse()
+          .forEach(function (i) {
+            return gridAreaRule.prepend(
+              Object.assign(i, {
+                raws: {
+                  between: gridArea.raws.between,
+                },
+              })
+            );
+          });
         rulesToInsert[lastArea].lastRule = gridAreaRule;
         lastRuleIsSet = true;
       } else if (rule.hasDuplicates && !rule.params && !selectorIsComplex) {
@@ -577,14 +644,21 @@ function insertAreas(css, isDisabled) {
           // grid-template has duplicates and not inside media rule
           var cloned = gridAreaRule.clone();
           cloned.removeAll();
-          getMSDecls(area, area.row.updateSpan, area.column.updateSpan).reverse().forEach(function (i) {
-            return cloned.prepend(Object.assign(i, {
-              raws: {
-                between: gridArea.raws.between
-              }
-            }));
-          });
-          cloned.selectors = changeDuplicateAreaSelectors(cloned.selectors, rule.selectors);
+          getMSDecls(area, area.row.updateSpan, area.column.updateSpan)
+            .reverse()
+            .forEach(function (i) {
+              return cloned.prepend(
+                Object.assign(i, {
+                  raws: {
+                    between: gridArea.raws.between,
+                  },
+                })
+              );
+            });
+          cloned.selectors = changeDuplicateAreaSelectors(
+            cloned.selectors,
+            rule.selectors
+          );
 
           if (rulesToInsert[lastArea].lastRule) {
             rulesToInsert[lastArea].lastRule.after(cloned);
@@ -593,19 +667,28 @@ function insertAreas(css, isDisabled) {
           rulesToInsert[lastArea].lastRule = cloned;
           lastRuleIsSet = true;
         })();
-      } else if (rule.hasDuplicates && !rule.params && selectorIsComplex && gridAreaRule.selector.includes(rule.selectors[0])) {
+      } else if (
+        rule.hasDuplicates &&
+        !rule.params &&
+        selectorIsComplex &&
+        gridAreaRule.selector.includes(rule.selectors[0])
+      ) {
         // grid-template has duplicates and not inside media rule
         // and the selector is complex
         gridAreaRule.walkDecls(/-ms-grid-(row|column)/, function (d) {
           return d.remove();
         });
-        getMSDecls(area, area.row.updateSpan, area.column.updateSpan).reverse().forEach(function (i) {
-          return gridAreaRule.prepend(Object.assign(i, {
-            raws: {
-              between: gridArea.raws.between
-            }
-          }));
-        });
+        getMSDecls(area, area.row.updateSpan, area.column.updateSpan)
+          .reverse()
+          .forEach(function (i) {
+            return gridAreaRule.prepend(
+              Object.assign(i, {
+                raws: {
+                  between: gridArea.raws.between,
+                },
+              })
+            );
+          });
       } else if (rule.params) {
         (function () {
           // grid-template is inside media rule
@@ -614,16 +697,23 @@ function insertAreas(css, isDisabled) {
           // rules and merge them easily
           var cloned = gridAreaRule.clone();
           cloned.removeAll();
-          getMSDecls(area, area.row.updateSpan, area.column.updateSpan).reverse().forEach(function (i) {
-            return cloned.prepend(Object.assign(i, {
-              raws: {
-                between: gridArea.raws.between
-              }
-            }));
-          });
+          getMSDecls(area, area.row.updateSpan, area.column.updateSpan)
+            .reverse()
+            .forEach(function (i) {
+              return cloned.prepend(
+                Object.assign(i, {
+                  raws: {
+                    between: gridArea.raws.between,
+                  },
+                })
+              );
+            });
 
           if (rule.hasDuplicates && hasDuplicateName) {
-            cloned.selectors = changeDuplicateAreaSelectors(cloned.selectors, rule.selectors);
+            cloned.selectors = changeDuplicateAreaSelectors(
+              cloned.selectors,
+              rule.selectors
+            );
           }
 
           cloned.raws = rule.node.raws;
@@ -638,7 +728,6 @@ function insertAreas(css, isDisabled) {
           } // set new rule as last rule ONLY if we didn't set lastRule for
           // this grid-area before
 
-
           if (!lastRuleIsSet) {
             rulesToInsert[lastArea].lastRule = gridAreaMedia || gridAreaRule;
           }
@@ -652,17 +741,20 @@ function insertAreas(css, isDisabled) {
   Object.keys(rulesToInsert).forEach(function (area) {
     var data = rulesToInsert[area];
     var lastRule = data.lastRule;
-    Object.keys(data).reverse().filter(function (p) {
-      return p !== 'lastRule';
-    }).forEach(function (params) {
-      if (data[params].length > 0 && lastRule) {
-        lastRule.after({
-          name: 'media',
-          params: params
-        });
-        lastRule.next().append(data[params]);
-      }
-    });
+    Object.keys(data)
+      .reverse()
+      .filter(function (p) {
+        return p !== "lastRule";
+      })
+      .forEach(function (params) {
+        if (data[params].length > 0 && lastRule) {
+          lastRule.after({
+            name: "media",
+            params: params,
+          });
+          lastRule.next().append(data[params]);
+        }
+      });
   });
   return undefined;
 }
@@ -674,17 +766,16 @@ function insertAreas(css, isDisabled) {
  * @return {void}
  */
 
-
 function warnMissedAreas(areas, decl, result) {
   var missed = Object.keys(areas);
-  decl.root().walkDecls('grid-area', function (gridArea) {
+  decl.root().walkDecls("grid-area", function (gridArea) {
     missed = missed.filter(function (e) {
       return e !== gridArea.value;
     });
   });
 
   if (missed.length > 0) {
-    decl.warn(result, 'Can not find grid areas: ' + missed.join(', '));
+    decl.warn(result, "Can not find grid areas: " + missed.join(", "));
   }
 
   return undefined;
@@ -698,15 +789,17 @@ function warnMissedAreas(areas, decl, result) {
  * @return {void}
  */
 
-
 function warnTemplateSelectorNotFound(decl, result) {
   var rule = decl.parent;
   var root = decl.root();
   var duplicatesFound = false; // slice selector array. Remove the last part (for comparison)
 
-  var slicedSelectorArr = list.space(rule.selector).filter(function (str) {
-    return str !== '>';
-  }).slice(0, -1); // we need to compare only if selector is complex.
+  var slicedSelectorArr = list
+    .space(rule.selector)
+    .filter(function (str) {
+      return str !== ">";
+    })
+    .slice(0, -1); // we need to compare only if selector is complex.
   // e.g '.grid-cell' is simple, but '.parent > .grid-cell' is complex
 
   if (slicedSelectorArr.length > 0) {
@@ -717,14 +810,19 @@ function warnTemplateSelectorNotFound(decl, result) {
       var templateSelectors = parent.selectors;
 
       var _parseTemplate2 = parseTemplate({
-        decl: d,
-        gap: getGridGap(d)
-      }),
-          areas = _parseTemplate2.areas;
+          decl: d,
+          gap: getGridGap(d),
+        }),
+        areas = _parseTemplate2.areas;
 
       var hasArea = areas[decl.value]; // find the the matching selectors
 
-      for (var _iterator3 = _createForOfIteratorHelperLoose(templateSelectors), _step3; !(_step3 = _iterator3()).done;) {
+      for (
+        var _iterator3 = _createForOfIteratorHelperLoose(templateSelectors),
+          _step3;
+        !(_step3 = _iterator3()).done;
+
+      ) {
         var tplSelector = _step3.value;
 
         if (gridTemplateFound) {
@@ -732,7 +830,7 @@ function warnTemplateSelectorNotFound(decl, result) {
         }
 
         var tplSelectorArr = list.space(tplSelector).filter(function (str) {
-          return str !== '>';
+          return str !== ">";
         });
         gridTemplateFound = tplSelectorArr.every(function (item, idx) {
           return item === slicedSelectorArr[idx];
@@ -747,7 +845,6 @@ function warnTemplateSelectorNotFound(decl, result) {
         foundAreaSelector = parent.selector;
       } // if we found the duplicate area with different selector
 
-
       if (foundAreaSelector && foundAreaSelector !== parent.selector) {
         duplicatesFound = true;
       }
@@ -756,7 +853,12 @@ function warnTemplateSelectorNotFound(decl, result) {
     }); // warn user if we didn't find template
 
     if (!gridTemplateFound && duplicatesFound) {
-      decl.warn(result, 'Autoprefixer cannot find a grid-template ' + ("containing the duplicate grid-area \"" + decl.value + "\" ") + ("with full selector matching: " + slicedSelectorArr.join(' ')));
+      decl.warn(
+        result,
+        "Autoprefixer cannot find a grid-template " +
+          ('containing the duplicate grid-area "' + decl.value + '" ') +
+          ("with full selector matching: " + slicedSelectorArr.join(" "))
+      );
     }
   }
 }
@@ -768,25 +870,27 @@ function warnTemplateSelectorNotFound(decl, result) {
  * @return {void}
  */
 
-
 function warnIfGridRowColumnExists(decl, result) {
   var rule = decl.parent;
   var decls = [];
   rule.walkDecls(/^grid-(row|column)/, function (d) {
-    if (!d.prop.endsWith('-end') && !d.value.startsWith('span')) {
+    if (!d.prop.endsWith("-end") && !d.value.startsWith("span")) {
       decls.push(d);
     }
   });
 
   if (decls.length > 0) {
     decls.forEach(function (d) {
-      d.warn(result, 'You already have a grid-area declaration present in the rule. ' + ("You should use either grid-area or " + d.prop + ", not both"));
+      d.warn(
+        result,
+        "You already have a grid-area declaration present in the rule. " +
+          ("You should use either grid-area or " + d.prop + ", not both")
+      );
     });
   }
 
   return undefined;
 } // Gap utils
-
 
 function getGridGap(decl) {
   var gap = {}; // try to find gap
@@ -794,12 +898,12 @@ function getGridGap(decl) {
   var testGap = /^(grid-)?((row|column)-)?gap$/;
   decl.parent.walkDecls(testGap, function (_ref8) {
     var prop = _ref8.prop,
-        value = _ref8.value;
+      value = _ref8.value;
 
     if (/^(grid-)?gap$/.test(prop)) {
       var _parser$nodes = parser(value).nodes,
-          row = _parser$nodes[0],
-          column = _parser$nodes[2];
+        row = _parser$nodes[0],
+        column = _parser$nodes[2];
       gap.row = row && parser.stringify(row);
       gap.column = column ? parser.stringify(column) : gap.row;
     }
@@ -815,7 +919,6 @@ function getGridGap(decl) {
  * @return {}
  */
 
-
 function parseMediaParams(params) {
   if (!params) {
     return false;
@@ -825,10 +928,10 @@ function parseMediaParams(params) {
   var prop;
   var value;
   parsed.walk(function (node) {
-    if (node.type === 'word' && /min|max/g.test(node.value)) {
+    if (node.type === "word" && /min|max/g.test(node.value)) {
       prop = node.value;
-    } else if (node.value.includes('px')) {
-      value = parseInt(node.value.replace(/\D/g, ''));
+    } else if (node.value.includes("px")) {
+      value = parseInt(node.value.replace(/\D/g, ""));
     }
   });
   return [prop, value];
@@ -840,7 +943,6 @@ function parseMediaParams(params) {
  * @type {String} selB
  * @return {Boolean}
  */
-
 
 function shouldInheritGap(selA, selB) {
   var result; // get arrays of selector split in 3-deep array
@@ -869,7 +971,8 @@ function shouldInheritGap(selA, selB) {
     if (idx) {
       result = splitSelectorArrB[0].every(function (arr, index) {
         return arr.every(function (part, innerIndex) {
-          return (// because selectorA has more space elements, we need to slice
+          return (
+            // because selectorA has more space elements, we need to slice
             // selectorA array by 'idx' number to compare them
             splitSelectorArrA[0].slice(idx)[index][innerIndex] === part
           );
@@ -898,7 +1001,6 @@ function shouldInheritGap(selA, selB) {
  * @return {Object | Boolean} return gap values or false (if not found)
  */
 
-
 function inheritGridGap(decl, gap) {
   var rule = decl.parent;
   var mediaRule = getParentMedia(rule);
@@ -910,9 +1012,8 @@ function inheritGridGap(decl, gap) {
     return false;
   } // e.g ['min-width']
 
-
   var _parseMediaParams = parseMediaParams(mediaRule.params),
-      prop = _parseMediaParams[0];
+    prop = _parseMediaParams[0];
 
   var lastBySpace = splitSelectorArr[0]; // get escaped value from the selector
   // if we have '.grid-2.foo.bar' selector, will be '\.grid\-2'
@@ -928,15 +1029,13 @@ function inheritGridGap(decl, gap) {
       return false;
     } // find grid-gap values
 
-
-    r.walkDecls('grid-gap', function (d) {
-      return gridGap = getGridGap(d);
+    r.walkDecls("grid-gap", function (d) {
+      return (gridGap = getGridGap(d));
     }); // skip rule without gaps
 
     if (!gridGap || Object.keys(gridGap).length === 0) {
       return true;
     } // skip rules that should not be inherited from
-
 
     if (!shouldInheritGap(rule.selector, r.selector)) {
       return true;
@@ -970,14 +1069,17 @@ function inheritGridGap(decl, gap) {
 
 function warnGridGap(_ref10) {
   var gap = _ref10.gap,
-      hasColumns = _ref10.hasColumns,
-      decl = _ref10.decl,
-      result = _ref10.result;
+    hasColumns = _ref10.hasColumns,
+    decl = _ref10.decl,
+    result = _ref10.result;
   var hasBothGaps = gap.row && gap.column;
 
-  if (!hasColumns && (hasBothGaps || gap.column && !gap.row)) {
+  if (!hasColumns && (hasBothGaps || (gap.column && !gap.row))) {
     delete gap.column;
-    decl.warn(result, 'Can not implement grid-gap without grid-template-columns');
+    decl.warn(
+      result,
+      "Can not implement grid-gap without grid-template-columns"
+    );
   }
 }
 /**
@@ -989,31 +1091,33 @@ function warnGridGap(_ref10) {
  * normalized // <= ['1fr', '20px', '50px', '20px', '50px', '1fr']
  */
 
-
 function normalizeRowColumn(str) {
   var normalized = parser(str).nodes.reduce(function (result, node) {
-    if (node.type === 'function' && node.value === 'repeat') {
-      var key = 'count';
+    if (node.type === "function" && node.value === "repeat") {
+      var key = "count";
 
-      var _node$nodes$reduce = node.nodes.reduce(function (acc, n) {
-        if (n.type === 'word' && key === 'count') {
-          acc[0] = Math.abs(parseInt(n.value));
-          return acc;
-        }
+      var _node$nodes$reduce = node.nodes.reduce(
+          function (acc, n) {
+            if (n.type === "word" && key === "count") {
+              acc[0] = Math.abs(parseInt(n.value));
+              return acc;
+            }
 
-        if (n.type === 'div' && n.value === ',') {
-          key = 'value';
-          return acc;
-        }
+            if (n.type === "div" && n.value === ",") {
+              key = "value";
+              return acc;
+            }
 
-        if (key === 'value') {
-          acc[1] += parser.stringify(n);
-        }
+            if (key === "value") {
+              acc[1] += parser.stringify(n);
+            }
 
-        return acc;
-      }, [0, '']),
-          count = _node$nodes$reduce[0],
-          value = _node$nodes$reduce[1];
+            return acc;
+          },
+          [0, ""]
+        ),
+        count = _node$nodes$reduce[0],
+        value = _node$nodes$reduce[1];
 
       if (count) {
         for (var i = 0; i < count; i++) {
@@ -1024,7 +1128,7 @@ function normalizeRowColumn(str) {
       return result;
     }
 
-    if (node.type === 'space') {
+    if (node.type === "space") {
       return result;
     }
 
@@ -1042,61 +1146,64 @@ function normalizeRowColumn(str) {
  * @see https://github.com/postcss/autoprefixer/issues/1148
  */
 
-
 function autoplaceGridItems(decl, result, gap, autoflowValue) {
   if (autoflowValue === void 0) {
-    autoflowValue = 'row';
+    autoflowValue = "row";
   }
 
   var parent = decl.parent;
   var rowDecl = parent.nodes.find(function (i) {
-    return i.prop === 'grid-template-rows';
+    return i.prop === "grid-template-rows";
   });
   var rows = normalizeRowColumn(rowDecl.value);
   var columns = normalizeRowColumn(decl.value); // Build array of area names with dummy values. If we have 3 columns and
   // 2 rows, filledRows will be equal to ['1 2 3', '4 5 6']
 
   var filledRows = rows.map(function (_, rowIndex) {
-    return Array.from({
-      length: columns.length
-    }, function (v, k) {
-      return k + rowIndex * columns.length + 1;
-    }).join(' ');
+    return Array.from(
+      {
+        length: columns.length,
+      },
+      function (v, k) {
+        return k + rowIndex * columns.length + 1;
+      }
+    ).join(" ");
   });
   var areas = parseGridAreas({
     rows: filledRows,
-    gap: gap
+    gap: gap,
   });
   var keys = Object.keys(areas);
   var items = keys.map(function (i) {
     return areas[i];
   }); // Change the order of cells if grid-auto-flow value is 'column'
 
-  if (autoflowValue.includes('column')) {
+  if (autoflowValue.includes("column")) {
     items = items.sort(function (a, b) {
       return a.column.start - b.column.start;
     });
   } // Insert new rules
 
-
   items.reverse().forEach(function (item, index) {
     var column = item.column,
-        row = item.row;
-    var nodeSelector = parent.selectors.map(function (sel) {
-      return sel + (" > *:nth-child(" + (keys.length - index) + ")");
-    }).join(', '); // create new rule
+      row = item.row;
+    var nodeSelector = parent.selectors
+      .map(function (sel) {
+        return sel + (" > *:nth-child(" + (keys.length - index) + ")");
+      })
+      .join(", "); // create new rule
 
     var node = parent.clone().removeAll(); // change rule selector
 
     node.selector = nodeSelector; // insert prefixed row/column values
 
     node.append({
-      prop: '-ms-grid-row',
-      value: row.start
+      prop: "-ms-grid-row",
+      value: row.start,
     });
     node.append({
-      prop: '-ms-grid-column',
-      value: column.start
+      prop: "-ms-grid-column",
+      value: column.start,
     }); // insert rule
 
     parent.after(node);
@@ -1119,5 +1226,5 @@ module.exports = {
   warnTemplateSelectorNotFound: warnTemplateSelectorNotFound,
   warnIfGridRowColumnExists: warnIfGridRowColumnExists,
   inheritGridGap: inheritGridGap,
-  autoplaceGridItems: autoplaceGridItems
+  autoplaceGridItems: autoplaceGridItems,
 };

@@ -5,7 +5,7 @@
  * Released under the MIT License.
  */
 
-'use strict';
+"use strict";
 
 /**
  * Loop over each item in an array and call the given function on every element.

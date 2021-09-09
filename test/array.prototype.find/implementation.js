@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-var ToObject = require('es-abstract/2019/ToObject');
-var ToLength = require('es-abstract/2019/ToLength');
-var IsCallable = require('es-abstract/2019/IsCallable');
+var ToObject = require("es-abstract/2019/ToObject");
+var ToLength = require("es-abstract/2019/ToLength");
+var IsCallable = require("es-abstract/2019/IsCallable");
 
 module.exports = function find(predicate) {
 	var list = ToObject(this);
 	var length = ToLength(list.length);
 	if (!IsCallable(predicate)) {
-		throw new TypeError('Array#find: predicate must be a function');
+		throw new TypeError("Array#find: predicate must be a function");
 	}
 	if (length === 0) {
 		return void 0;

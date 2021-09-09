@@ -1,27 +1,76 @@
 "use strict";
 
-function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+function _defaults(obj, defaults) {
+  var keys = Object.getOwnPropertyNames(defaults);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var value = Object.getOwnPropertyDescriptor(defaults, key);
+    if (value && value.configurable && obj[key] === undefined) {
+      Object.defineProperty(obj, key, value);
+    }
+  }
+  return obj;
+}
 
-function _createForOfIteratorHelperLoose(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; return function () { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } it = o[Symbol.iterator](); return it.next.bind(it); }
+function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+  var it;
+  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
+    if (
+      Array.isArray(o) ||
+      (it = _unsupportedIterableToArray(o)) ||
+      (allowArrayLike && o && typeof o.length === "number")
+    ) {
+      if (it) o = it;
+      var i = 0;
+      return function () {
+        if (i >= o.length) return { done: true };
+        return { done: false, value: o[i++] };
+      };
+    }
+    throw new TypeError(
+      "Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+    );
+  }
+  it = o[Symbol.iterator]();
+  return it.next.bind(it);
+}
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
+    return _arrayLikeToArray(o, minLen);
+}
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _defaults(subClass, superClass); }
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  _defaults(subClass, superClass);
+}
 
-var _require = require('postcss'),
-    list = _require.list;
+var _require = require("postcss"),
+  list = _require.list;
 
-var OldSelector = require('./old-selector');
+var OldSelector = require("./old-selector");
 
-var Prefixer = require('./prefixer');
+var Prefixer = require("./prefixer");
 
-var Browsers = require('./browsers');
+var Browsers = require("./browsers");
 
-var utils = require('./utils');
+var utils = require("./utils");
 
-var Selector = /*#__PURE__*/function (_Prefixer) {
+var Selector = /*#__PURE__*/ (function (_Prefixer) {
   _inheritsLoose(Selector, _Prefixer);
 
   function Selector(name, prefixes, all) {
@@ -32,9 +81,8 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     return _this;
   }
   /**
-     * Is rule selectors need to be prefixed
-     */
-
+   * Is rule selectors need to be prefixed
+   */
 
   var _proto = Selector.prototype;
 
@@ -44,19 +92,17 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     }
 
     return false;
-  }
+  };
   /**
-     * Return prefixed version of selector
-     */
-  ;
+   * Return prefixed version of selector
+   */
 
   _proto.prefixed = function prefixed(prefix) {
     return this.name.replace(/^(\W*)/, "$1" + prefix);
-  }
+  };
   /**
-     * Lazy loadRegExp for name
-     */
-  ;
+   * Lazy loadRegExp for name
+   */
 
   _proto.regexp = function regexp(prefix) {
     if (this.regexpCache[prefix]) {
@@ -64,21 +110,22 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     }
 
     var name = prefix ? this.prefixed(prefix) : this.name;
-    this.regexpCache[prefix] = new RegExp("(^|[^:\"'=])" + utils.escapeRegexp(name), 'gi');
+    this.regexpCache[prefix] = new RegExp(
+      "(^|[^:\"'=])" + utils.escapeRegexp(name),
+      "gi"
+    );
     return this.regexpCache[prefix];
-  }
+  };
   /**
-     * All possible prefixes
-     */
-  ;
+   * All possible prefixes
+   */
 
   _proto.possible = function possible() {
     return Browsers.prefixes();
-  }
+  };
   /**
-     * Return all possible selector prefixes
-     */
-  ;
+   * Return all possible selector prefixes
+   */
 
   _proto.prefixeds = function prefixeds(rule) {
     var _this2 = this;
@@ -93,7 +140,7 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
 
     var prefixeds = {};
 
-    if (rule.selector.includes(',')) {
+    if (rule.selector.includes(",")) {
       var ruleParts = list.comma(rule.selector);
       var toProcess = ruleParts.filter(function (el) {
         return el.includes(_this2.name);
@@ -101,16 +148,27 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
 
       var _loop = function _loop() {
         var prefix = _step.value;
-        prefixeds[prefix] = toProcess.map(function (el) {
-          return _this2.replace(el, prefix);
-        }).join(', ');
+        prefixeds[prefix] = toProcess
+          .map(function (el) {
+            return _this2.replace(el, prefix);
+          })
+          .join(", ");
       };
 
-      for (var _iterator = _createForOfIteratorHelperLoose(this.possible()), _step; !(_step = _iterator()).done;) {
+      for (
+        var _iterator = _createForOfIteratorHelperLoose(this.possible()), _step;
+        !(_step = _iterator()).done;
+
+      ) {
         _loop();
       }
     } else {
-      for (var _iterator2 = _createForOfIteratorHelperLoose(this.possible()), _step2; !(_step2 = _iterator2()).done;) {
+      for (
+        var _iterator2 = _createForOfIteratorHelperLoose(this.possible()),
+          _step2;
+        !(_step2 = _iterator2()).done;
+
+      ) {
         var prefix = _step2.value;
         prefixeds[prefix] = this.replace(rule.selector, prefix);
       }
@@ -118,11 +176,10 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
 
     rule._autoprefixerPrefixeds[this.name] = prefixeds;
     return rule._autoprefixerPrefixeds;
-  }
+  };
   /**
-     * Is rule already prefixed before
-     */
-  ;
+   * Is rule already prefixed before
+   */
 
   _proto.already = function already(rule, prefixeds, prefix) {
     var index = rule.parent.index(rule) - 1;
@@ -130,7 +187,7 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     while (index >= 0) {
       var before = rule.parent.nodes[index];
 
-      if (before.type !== 'rule') {
+      if (before.type !== "rule") {
         return false;
       }
 
@@ -157,19 +214,17 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     }
 
     return false;
-  }
+  };
   /**
-     * Replace selectors by prefixed one
-     */
-  ;
+   * Replace selectors by prefixed one
+   */
 
   _proto.replace = function replace(selector, prefix) {
     return selector.replace(this.regexp(), "$1" + this.prefixed(prefix));
-  }
+  };
   /**
-     * Clone and add prefixes for at-rule
-     */
-  ;
+   * Clone and add prefixes for at-rule
+   */
 
   _proto.add = function add(rule, prefix) {
     var prefixeds = this.prefixeds(rule);
@@ -179,20 +234,19 @@ var Selector = /*#__PURE__*/function (_Prefixer) {
     }
 
     var cloned = this.clone(rule, {
-      selector: prefixeds[this.name][prefix]
+      selector: prefixeds[this.name][prefix],
     });
     rule.parent.insertBefore(rule, cloned);
-  }
+  };
   /**
-     * Return function to fast find prefixed selector
-     */
-  ;
+   * Return function to fast find prefixed selector
+   */
 
   _proto.old = function old(prefix) {
     return new OldSelector(this, prefix);
   };
 
   return Selector;
-}(Prefixer);
+})(Prefixer);
 
 module.exports = Selector;

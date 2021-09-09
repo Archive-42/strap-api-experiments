@@ -1,15 +1,15 @@
 "use strict";
 
-var browserslist = require('browserslist');
+var browserslist = require("browserslist");
 
-var agents = require('caniuse-lite').agents;
+var agents = require("caniuse-lite").agents;
 
-var utils = require('./utils');
+var utils = require("./utils");
 
-var Browsers = /*#__PURE__*/function () {
+var Browsers = /*#__PURE__*/ (function () {
   /**
-     * Return all prefixes for default browser data
-     */
+   * Return all prefixes for default browser data
+   */
   Browsers.prefixes = function prefixes() {
     if (this.prefixesCache) {
       return this.prefixesCache;
@@ -25,15 +25,14 @@ var Browsers = /*#__PURE__*/function () {
       return b.length - a.length;
     });
     return this.prefixesCache;
-  }
+  };
   /**
-     * Check is value contain any possible prefix
-     */
-  ;
+   * Check is value contain any possible prefix
+   */
 
   Browsers.withPrefix = function withPrefix(value) {
     if (!this.prefixesRegexp) {
-      this.prefixesRegexp = new RegExp(this.prefixes().join('|'));
+      this.prefixesRegexp = new RegExp(this.prefixes().join("|"));
     }
 
     return this.prefixesRegexp.test(value);
@@ -46,9 +45,8 @@ var Browsers = /*#__PURE__*/function () {
     this.selected = this.parse(requirements);
   }
   /**
-     * Return browsers selected by requirements
-     */
-
+   * Return browsers selected by requirements
+   */
 
   var _proto = Browsers.prototype;
 
@@ -61,16 +59,15 @@ var Browsers = /*#__PURE__*/function () {
 
     opts.path = this.options.from;
     return browserslist(requirements, opts);
-  }
+  };
   /**
-     * Return prefix for selected browser
-     */
-  ;
+   * Return prefix for selected browser
+   */
 
   _proto.prefix = function prefix(browser) {
-    var _browser$split = browser.split(' '),
-        name = _browser$split[0],
-        version = _browser$split[1];
+    var _browser$split = browser.split(" "),
+      name = _browser$split[0],
+      version = _browser$split[1];
 
     var data = this.data[name];
     var prefix = data.prefix_exceptions && data.prefix_exceptions[version];
@@ -80,17 +77,16 @@ var Browsers = /*#__PURE__*/function () {
     }
 
     return "-" + prefix + "-";
-  }
+  };
   /**
-     * Is browser is selected by requirements
-     */
-  ;
+   * Is browser is selected by requirements
+   */
 
   _proto.isSelected = function isSelected(browser) {
     return this.selected.includes(browser);
   };
 
   return Browsers;
-}();
+})();
 
 module.exports = Browsers;

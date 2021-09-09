@@ -6,16 +6,16 @@
 module.exports = function (prefix) {
   var spec;
 
-  if (prefix === '-webkit- 2009' || prefix === '-moz-') {
+  if (prefix === "-webkit- 2009" || prefix === "-moz-") {
     spec = 2009;
-  } else if (prefix === '-ms-') {
+  } else if (prefix === "-ms-") {
     spec = 2012;
-  } else if (prefix === '-webkit-') {
-    spec = 'final';
+  } else if (prefix === "-webkit-") {
+    spec = "final";
   }
 
-  if (prefix === '-webkit- 2009') {
-    prefix = '-webkit-';
+  if (prefix === "-webkit- 2009") {
+    prefix = "-webkit-";
   }
 
   return [spec, prefix];

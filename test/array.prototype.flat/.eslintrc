@@ -9,23 +9,26 @@
 		"func-name-matching": 0,
 		"max-statements-per-line": [2, { "max": 2 }],
 		"multiline-comment-style": 0,
-		"new-cap": [2, {
-			"capIsNewExceptions": [
-				"ArraySpeciesCreate",
-				"Call",
-				"CreateDataPropertyOrThrow",
-				"FlattenIntoArray",
-				"Get",
-				"HasProperty",
-				"IsArray",
-				"Set",
-				"ToInteger",
-				"ToLength",
-				"ToObject",
-				"ToString"
-			]
-		}],
-		"no-magic-numbers": 0,
+		"new-cap": [
+			2,
+			{
+				"capIsNewExceptions": [
+					"ArraySpeciesCreate",
+					"Call",
+					"CreateDataPropertyOrThrow",
+					"FlattenIntoArray",
+					"Get",
+					"HasProperty",
+					"IsArray",
+					"Set",
+					"ToInteger",
+					"ToLength",
+					"ToObject",
+					"ToString"
+				]
+			}
+		],
+		"no-magic-numbers": 0
 	},
 
 	"overrides": [
@@ -33,8 +36,8 @@
 			"files": "test/**",
 			"rules": {
 				"max-params": 0,
-				"no-invalid-this": [1],
-			},
-		},
-	],
+				"no-invalid-this": [1]
+			}
+		}
+	]
 }

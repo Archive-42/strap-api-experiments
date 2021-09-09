@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-var ArraySpeciesCreate = require('es-abstract/2020/ArraySpeciesCreate');
-var FlattenIntoArray = require('es-abstract/2020/FlattenIntoArray');
-var Get = require('es-abstract/2020/Get');
-var ToInteger = require('es-abstract/2020/ToInteger');
-var ToLength = require('es-abstract/2020/ToLength');
-var ToObject = require('es-abstract/2020/ToObject');
+var ArraySpeciesCreate = require("es-abstract/2020/ArraySpeciesCreate");
+var FlattenIntoArray = require("es-abstract/2020/FlattenIntoArray");
+var Get = require("es-abstract/2020/Get");
+var ToInteger = require("es-abstract/2020/ToInteger");
+var ToLength = require("es-abstract/2020/ToLength");
+var ToObject = require("es-abstract/2020/ToObject");
 
 module.exports = function flat() {
 	var O = ToObject(this);
-	var sourceLen = ToLength(Get(O, 'length'));
+	var sourceLen = ToLength(Get(O, "length"));
 
 	var depthNum = 1;
-	if (arguments.length > 0 && typeof arguments[0] !== 'undefined') {
+	if (arguments.length > 0 && typeof arguments[0] !== "undefined") {
 		depthNum = ToInteger(arguments[0]);
 	}
 
