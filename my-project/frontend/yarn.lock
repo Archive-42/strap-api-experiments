@@ -2208,10 +2208,10 @@ jest-worker@27.0.0-next.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-js-cookie@3.0.0-rc.4:
-  version "3.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.0-rc.4.tgz#ce2b112a8a81b01cad5415be196bd99e5f6ccd00"
-  integrity sha512-L1zsb2j2Lrr6b8VsMG8kVzrUi1geAzeK9QH2C1K99JGf3BPyTmT1sEChszHs9EtuvPzskH2Tbb7fJx9Jbe11og==
+js-cookie@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
